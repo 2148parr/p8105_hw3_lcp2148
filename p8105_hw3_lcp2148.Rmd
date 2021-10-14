@@ -23,10 +23,20 @@ This problem uses the Instacart data. DO NOT include this dataset in your local 
 ```{r instacart}
 
 data("instacart")
+
+```
+
+The goal is to do some exploration of this dataset. To that end, write a short description of the dataset, noting the size and structure of the data, describing some key variables, and giving illstrative examples of observations. Then, do or answer the following (commenting on the results of each):
+
+The dimensions of the instacart data set are `r dim(instacart)`, with `r length(t(instacart))` observations, and the variables in this data set are: `r names(instacart)`
+
+```{r instacart_aisles}
+
+data("instacart")
+
 ```
 
 
-The goal is to do some exploration of this dataset. To that end, write a short description of the dataset, noting the size and structure of the data, describing some key variables, and giving illstrative examples of observations. Then, do or answer the following (commenting on the results of each):
 
 How many aisles are there, and which aisles are the most items ordered from?
 Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it.
