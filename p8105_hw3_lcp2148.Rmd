@@ -35,8 +35,15 @@ The goal is to do some exploration of this dataset. To that end, write a short d
 
 The dimensions of the instacart data set are `r dim(instacart)`, with `r length(t(instacart))` observations, and the variables in this data set are: `r names(instacart)`
 
+
 How many aisles are there, and which aisles are the most items ordered from?
-Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it.
+There are `r instacart %>% group_by(aisle) %>% summarise(n_obs = n())` aisles and those most ordered from are `r instacart %>% count(aisle) %>% arrange (desc_(aisle))`
+
+
+Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it. scatter ordered by magniture
+
+
+
 Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table. 
 
 ```{r instacart_aisles}
