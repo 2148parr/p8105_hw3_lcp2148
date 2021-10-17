@@ -21,6 +21,24 @@ library(ggplot2)
 library(tidyr)
 library(ggridges)
 
+library(tidyverse)
+
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
 ```
 
 ## Problem 1
@@ -35,10 +53,15 @@ The goal is to do some exploration of this dataset. To that end, write a short d
 
 The dimensions of the instacart data set are `r dim(instacart)`, with `r length(t(instacart))` observations, and the variables in this data set are: `r names(instacart)`
 
+Number of aisles (134) and those most ordered from are found with the code below:
 
-How many aisles are there, and which aisles are the most items ordered from?
-There are `r instacart %>% group_by(aisle) %>% summarise(n_obs = n())` aisles and those most ordered from are `r instacart %>% count(aisle) %>% arrange (desc_(aisle))`
+```{r instacart_not_inline}
 
+instacart %>% 
+  group_by(aisle) 
+
+
+```
 
 Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it. scatter ordered by magniture
 
