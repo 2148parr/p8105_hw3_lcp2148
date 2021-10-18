@@ -58,8 +58,8 @@ Number of aisles (134) and those most ordered from are found with the code below
 ```{r instacart_not_inline}
 
 instacart %>% 
-  group_by(aisle) 
-
+  count(aisle) %>% 
+  arrange(desc(aisle))
 
 ```
 
