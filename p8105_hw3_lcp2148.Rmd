@@ -59,7 +59,8 @@ Number of aisles (134) and those most ordered from are found with the code below
 
 instacart %>% 
   count(aisle) %>% 
-  arrange(desc(aisle))
+  summarise(n_obs = n()) %>%
+  arrange(aisle,desc(n_obs))
 
 ```
 
@@ -71,10 +72,8 @@ Make a table showing the three most popular items in each of the aisles “bakin
 
 ```{r instacart_aisles}
 
-
 instacart %>% 
-  group_by(aisle) %>%
-  summarise(n_obs = n()) 
+  group_by(aisle) 
 
 
 ```
