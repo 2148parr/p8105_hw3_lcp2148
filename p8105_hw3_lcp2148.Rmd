@@ -46,6 +46,7 @@ This problem uses the Instacart data. DO NOT include this dataset in your local 
 ```{r instacart}
 
 data("instacart")
+force(instacart)
 
 ```
 
@@ -59,8 +60,7 @@ Number of aisles (134) and those most ordered from are found with the code below
 
 instacart %>% 
   count(aisle) %>% 
-  summarise(n_obs = n()) %>%
-  arrange(aisle,desc(n_obs))
+  summarise(n_obs = n()) 
 
 ```
 
