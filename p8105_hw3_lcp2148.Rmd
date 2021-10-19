@@ -76,7 +76,7 @@ insta_plot1 = n_aisles %>%
     n_aisles > 10000)  %>%  
   mutate(
     aisle = factor(aisle),
-    aisle = fct_reorder(aisle, n)
+    aisle = fct_reorder(aisle, n_aisles)
   ) %>%  
   ggplot(aes(x = aisle, y = n)) +
            geom_bar(stat = "identity", fill = "grey") +
