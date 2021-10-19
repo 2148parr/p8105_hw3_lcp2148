@@ -55,16 +55,28 @@ The dimensions of the instacart data set are `r dim(instacart)`, with `r length(
 
 Number of aisles (134) and those most ordered from are found with the code below:
 
+I also make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it. 
+oder_number is derived from products per aisle 
+scatter ordered by magniture
+
+
 ```{r instacart_not_inline}
 
-instacart %>% 
-  select(aisle, product_name) %>% 
-  mutate(summarise(n_obs = n(product_name))) %>%
-  order(min_rank(desc(n_obs)))
+instacart %>% pull(aisle, product_name) %>% 
+  nchar(instacart$product_name, keepNA = FALSE) %>% 
+  mutate(
+    num_order = count(product_name)) %>% 
+  filter(num_order > 10000) %>% 
+  ggplot(aes(x = aisle)) +
+           geom_histogram() +
+           labels(
+             Title = "Number of items ordered per aisle",
+             x = "aisle",
+             y = "number of orders"
+           )
+         
   
 ```
-
-Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it. scatter ordered by magniture
 
 
 
