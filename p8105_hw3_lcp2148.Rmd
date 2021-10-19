@@ -62,15 +62,20 @@ scatter ordered by magniture
 
 ```{r instacart_not_inline}
 
-instacart %>% pull(aisle, product_name) %>% 
-  nchar(instacart$product_name, keepNA = FALSE) %>% 
-  mutate(
-    num_order = count(product_name)) %>% 
-  filter(num_order > 10000) %>% 
-  ggplot(aes(x = aisle)) +
+instacart %>%
+  group_by(aisle) %>%
+  summarize(n_obs = n(), 
+  n_aisles = n_distict(aisle))
+
+
+instacart %>%  
+  filter(
+    aisle_id > 100
+  )  %>%  
+  ggplot(aes(x = aisle, y = num_product)) +
            geom_histogram() +
-           labels(
-             Title = "Number of items ordered per aisle",
+           labs(
+             title = "Number of items ordered per aisle",
              x = "aisle",
              y = "number of orders"
            )
