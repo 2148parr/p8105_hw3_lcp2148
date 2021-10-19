@@ -98,7 +98,8 @@ Make a table showing the three most popular items in each of the aisles “bakin
 
 ```{r instacart_aisles}
 
-instacart %>% 
+insta_table = 
+  instacart %>% 
   filter(aisle == c("baking ingredients", "dog food care", "packaged vegetables fruits")) %>% 
   group_by(aisle) %>%  
   count(product_name) %>% 
@@ -106,6 +107,7 @@ instacart %>%
          product_name = tolower(product_name)) %>% 
   filter(product_pop <= 3)  %>% 
   arrange(aisle, product_pop)
+knitr::kable(insta_table, title = "Most popular items in three aisles")
 
 
 ```
