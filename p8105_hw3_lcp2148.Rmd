@@ -73,10 +73,10 @@ nrow(n_aisles)
 
 insta_plot1 = n_aisles %>%  
   filter(
-    n_aisles > 10000)  %>%  
+   n > 10000)  %>%  
   mutate(
     aisle = factor(aisle),
-    aisle = fct_reorder(aisle, n_aisles)
+    aisle = fct_reorder(aisle, n)
   ) %>%  
   ggplot(aes(x = aisle, y = n)) +
            geom_bar(stat = "identity", fill = "grey") +
@@ -99,7 +99,13 @@ Make a table showing the three most popular items in each of the aisles “bakin
 ```{r instacart_aisles}
 
 instacart %>% 
-  group_by(aisle) 
+  filter(aisle == c("baking ingredients", "dog food care", "packaged vegetables fruits")) %>% 
+  group_by(aisle) %>%  
+  count(product_name) %>% 
+  mutate(product_pop = min_rank(desc(n)),
+         product_name = tolower(product_name)) %>% 
+  filter(product_pop <= 3)  %>% 
+  arrange(aisle, product_pop)
 
 
 ```
