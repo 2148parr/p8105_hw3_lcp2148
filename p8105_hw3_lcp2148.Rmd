@@ -107,15 +107,40 @@ insta_table =
          product_name = tolower(product_name)) %>% 
   filter(product_pop <= 3)  %>% 
   arrange(aisle, product_pop)
-knitr::kable(insta_table, title = "Most popular items in three aisles")
-
+knitr::kable(insta_table, caption = "Most popular items in three aisles")
 
 ```
 
-
-
-
 Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).
+##  mutate(product_name = tolower(product_name),
+##         order_dow = recode(order_dow, 0 = "sunday", 1 = "monday", 2 =
+##                          "tuesday", 3 = "wednesday", 4 = "thursday", 
+##                        5 = "friday", 6 = "saturday"))  %>% 
+
+
+##  mutate(order_dow = fct_reorder(order_dow, "sunday", "monday", "tuesday", "wednesday", 
+##                               "thursday", "friday", "saturday")) %>%
+
+```{r instacart_apple_coffee_hour}
+
+insta_table2 = 
+  instacart %>% 
+  mutate(product_name = tolower(product_name),
+         order_dow = recode(order_dow, 
+                            "0" = "sunday", "1" = "monday", "2" = "tuesday",
+                            "3" = "wednesday", "4" = "thursday", "5" = "friday", 
+                            "6" = "saturday")) %>% 
+  filter(product_name == c("pink lady apples", "coffee ice cream")) %>% 
+  group_by(product_name, order_dow) %>%  
+  summarize(mean_hour = mean(order_hour_of_day)) %>% 
+  pivot_wider(names_from = order_dow, 
+              values_from = mean_hour)
+
+knitr::kable(insta_table2, digits = 3,
+             caption = "Mean hour Pink Lady Apples and Coffee Ice Cream are ordered on each day")
+
+```
+
 
 ## Problem 2
 
@@ -129,8 +154,18 @@ I will clean :
 
 ```{r brfss}
 
+data("brfss_smart2010")
+
 brfss = 
-  brfss_smart2010 %>% janitor::clean_names() 
+  brfss_smart2010 %>% 
+  janitor::clean_names() %>%
+  filter(topic == "Overall Health", 
+         response == c("Excellent", "Very Good", "Good", "Fair", "Poor")) %>%
+  mutate(response = factor(response, levels = c("Excellent", "Very Good", "Good", 
+                                                "Fair", "Poor") )) %>%
+  separate(locationdesc, c("state", "location", "rest")) %>%
+  unite(location, c("location", "rest")) %>%
+  arrange(response)
 
 ```
 
