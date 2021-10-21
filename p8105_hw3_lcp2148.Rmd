@@ -10,21 +10,15 @@ output:
 
 # Setup 
 
-I will load relevant packages here :3
+First, I load relevant packages and set global preferences. 
 
-```{r setup}
+```{r setup, message = FALSE}
 
 library(tidyverse)
 library(p8105.datasets)
 library(httr)
 library(jsonlite)
-library(dplyr)
-library(patchwork)
-library(ggplot2)
-library(tidyr)
-library(ggridges)
 
-library(tidyverse)
 
 knitr::opts_chunk$set(
   fig.width = 6,
@@ -159,8 +153,7 @@ brfss =
   janitor::clean_names() %>%
   filter(topic == "Overall Health", 
          response == c("Excellent", "Very Good", "Good", "Fair", "Poor")) %>%
-  mutate(response = factor(response, levels = c("Excellent", "Very Good", "Good", 
-                                                "Fair", "Poor") )) %>%
+  mutate(response = factor(response, levels = c("Excellent", "Very Good", "Good", "Fair", "Poor") )) %>%
   arrange(response) %>% 
   rename(state = locationabbr) %>% 
   select(-c(data_value_footnote, data_value_footnote_symbol, location_id)) %>% 
@@ -231,18 +224,17 @@ I now make a two-panel bar graph for the years 2006 and 2010 showing the distrib
 
 brfss_final = 
   brfss %>%
-  filter(year == c(2006, 2010),
+  filter((year == "2006" | year == "2010"),
         state == "NY")  %>%
-  group_by(year, response) %>%
-  summarize(mean_dv = mean(data_value, na.rm = TRUE)) %>%
+  group_by(data_value) %>%
   ggplot(aes(x = response,
-             y = mean_dv, 
+             y = data_value, 
              fill = response)) +
   geom_col(position = "dodge") +
   facet_grid(. ~ year) +
   labs(x = "response",
        y = "data value",
-       title = "Distribution of mean data value among locations in NY")
+       title = "Distribution of data value among locations in NY")
 
 brfss_final
 
@@ -264,6 +256,16 @@ Load, tidy, and otherwise wrangle the data. Your final dataset should include al
 
 accel = read_csv(file = "./hw3_data_files/accel_data.csv") %>%
   janitor::clean_names() 
+
+accel_cleaned = 
+  accel %>% 
+  pivot_longer(
+    cols = activity_1:activity_1440,
+    names_to = "activity_number",
+    values_to = "activity_counts",
+    names_prefix = "activity.") %>%
+  mutate(
+    weekend = (day == "Saturday" | day == "Sunday"))
 
 
 ```
