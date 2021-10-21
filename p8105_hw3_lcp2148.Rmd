@@ -40,7 +40,7 @@ scale_fill_discrete = scale_fill_viridis_d
 
 ## Problem 1
 
-First, I load the Instacart data from the p8105.datasets using:
+I load the Instacart data from the p8105.datasets using:
 
 ```{r instacart}
 
@@ -52,7 +52,7 @@ The goal is to do some exploration of this dataset. To that end, write a short d
 
 The dimensions of the instacart data set are `r dim(instacart)`, with `r length(t(instacart))` observations, and the variables in this data set are: `r names(instacart)`
 
-Number of aisles (134) and those most ordered from (fresh vegetables, fresh fruits, packages vagetables and fruits, yogurt, and cheese being the five more popular) are found with the code below, and I also make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered, derived from the products ordered per aise and arranged by magnitude.
+Number of aisles (134) and those most ordered from (fresh vegetables, fresh fruits, packages vegetables and fruits, yogurt, and cheese being the five most popular) are found with the code below, and I also make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered, derived from the products ordered per aise and arranged by magnitude.
 
 ```{r instacart_not_inline}
 
@@ -120,9 +120,7 @@ Next, I make a table showing the mean hour of the day at which Pink Lady Apples 
 insta_table2 = 
   instacart %>% 
   mutate(product_name = tolower(product_name),
-         order_dow = recode(order_dow, "0" = "sunday", "1" = "monday", 
-                            "2" = "tuesday", "3" = "wednesday", "4" = "thursday", 
-                            "5" = "friday", "6" = "saturday")) %>%
+         order_dow = recode(order_dow, "0" = "sunday", "1" = "monday", "2" = "tuesday", "3" = "wednesday", "4" = "thursday", "5" = "friday", "6" = "saturday")) %>%
   filter(product_name == c("pink lady apples", "coffee ice cream")) %>% 
   group_by(product_name, order_dow) %>%  
   summarize(mean_hour = mean(order_hour_of_day)) %>% 
@@ -165,8 +163,6 @@ Using this dataset, do or answer the following (commenting on the results of eac
 
 In 2002, which states were observed at 7 or more locations? What about in 2010?
 
-6 in 2002 
-13 2010
 ```{r brfss_years, message = FALSE}
 brfss_2002 = 
   brfss %>% 
@@ -241,10 +237,7 @@ brfss_final
 
 ```
 
-
-
 ## Problem 3
-
 
 This problem uses five weeks of accelerometer data collected on a 63 year-old male with BMI 25, who was admitted to the Advanced Cardiac Care Center of Columbia University Medical Center and diagnosed with congestive heart failure (CHF). The data can be downloaded here. In this spreadsheet, variables activity.* are the activity counts for each minute of a 24-hour day starting at midnight.
 
@@ -272,6 +265,33 @@ The dimensions of the new data set are `r dim(accel_cleaned)`. The varriables ar
 
 Traditional analyses of accelerometer data focus on the total activity over the day. Using your tidied dataset, aggregate accross minutes to create a total activity variable for each day, and create a table showing these totals. Are any trends apparent?
 
+```{r accel_total}
 
-Accelerometer data allows the inspection activity over the course of the day. Make a single-panel plot that shows the 24-hour activity time courses for each day and use color to indicate day of the week. Describe in words any patterns or conclusions you can make based on this graph.
+accel_total = 
+  accel_cleaned %>% 
+  group_by(day_id) %>% 
+  summarize(total_activity_counts = sum(activity_counts))
+knitr::kable(accel_total)
 
+```
+
+There are no major trends, and some days have much more activity than others. Occasionally, some have relatively little activity, such as days 2, 24, and 31. 
+
+Finally, I make a single-panel plot that shows the 24-hour activity time courses for each day and use color to indicate day of the week. 
+
+```{r accel_day}
+
+accel_cleaned %>% 
+  mutate(activity_numeric = as.numeric(activity_number)) %>%
+  group_by(day, activity_numeric) %>%
+  summarize(mean_activity = mean(activity_counts))  %>% 
+ggplot(aes(x = activity_numeric, y = mean_activity, color = day)) + geom_smooth(se = FALSE) +
+  labs(x = "activity (hours)", y = "average activity counts", title = "Average 24-hour activity time course for days of the week", color = "day of the week") +
+  scale_x_discrete(limit = c(0, 480, 960, 1440), 
+                   labels = c("0", "8", "16", "24"))
+
+ggsave("accel_spaghetti.pdf", width = 8, height = 5)
+
+```
+
+The graph does not indicate any specific pattern or trends in activity time courses. 
