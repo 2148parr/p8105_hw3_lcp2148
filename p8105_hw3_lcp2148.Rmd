@@ -48,8 +48,6 @@ data("instacart")
 
 ```
 
-The goal is to do some exploration of this dataset. To that end, write a short description of the dataset, noting the size and structure of the data, describing some key variables, and giving illstrative examples of observations. Then, do or answer the following (commenting on the results of each):
-
 The dimensions of the instacart data set are `r dim(instacart)`, with `r length(t(instacart))` observations, and the variables in this data set are: `r names(instacart)`
 
 Number of aisles (134) and those most ordered from (fresh vegetables, fresh fruits, packages vegetables and fruits, yogurt, and cheese being the five most popular) are found with the code below, and I also make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered, derived from the products ordered per aise and arranged by magnitude.
@@ -105,15 +103,7 @@ knitr::kable(insta_table, caption = "Most popular items in three aisles")
 
 ```
 
-Next, I make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week, formatting for human readers. 
-##  mutate(product_name = tolower(product_name),
-##         order_dow = recode(order_dow, 0 = "sunday", 1 = "monday", 2 =
-##                          "tuesday", 3 = "wednesday", 4 = "thursday", 
-##                        5 = "friday", 6 = "saturday"))  %>% 
-
-
-##  mutate(order_dow = fct_reorder(order_dow, "sunday", "monday", "tuesday", "wednesday", 
-##                               "thursday", "friday", "saturday")) %>%
+Next, I make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week, using `pivot_wider` to make it a 2x7 table. 
 
 ```{r instacart_apple_coffee_hour, message = FALSE}
 
@@ -150,7 +140,7 @@ brfss =
   brfss_smart2010 %>% 
   janitor::clean_names() %>%
   filter(topic == "Overall Health", 
-         response == c("Excellent", "Very Good", "Good", "Fair", "Poor")) %>%
+         response %in% c("Excellent", "Very Good", "Good", "Fair", "Poor")) %>%
   mutate(response = factor(response, levels = c("Excellent", "Very Good", "Good", "Fair", "Poor") )) %>%
   arrange(response) %>% 
   rename(state = locationabbr) %>% 
